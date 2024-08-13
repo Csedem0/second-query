@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Query Letter</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        .letterhead, .date, .recipient, .subject, .content, .signature {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 2px;
+            margin-left: 5px;
+            margin-right: 5px;
+            border: none;
+            border-bottom: 1px solid #000;
+            font-family: inherit;
+            font-size: inherit;
+            width: auto;
+            box-sizing: content-box;
+        }
+        .letterhead, .subject {
+            font-weight: bold;
+        }
+        button {
+            background-color: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        button:hover {
+            background-color: #34495e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letterhead">
+        <input type="text" id="companyLetterhead" placeholder="[Your Company’s Letterhead]" required>
+    </div>
+
+    <div class="date">
+        Date: <input type="text" id="date" placeholder="[Insert Date]" required>
+    </div>
+
+    <div class="recipient">
+        To: <br>
+        <input type="text" id="employeeName" placeholder="[Employee's Name]" required><br>
+        <input type="text" id="employeePosition" placeholder="[Employee's Position]" required><br>
+        <input type="text" id="department" placeholder="[Department]" required><br>
+        <input type="text" id="companyName" placeholder="[Company Name]" required><br>
+        <input type="text" id="companyAddress" placeholder="[Company Address]" required>
+    </div>
+
+    <div class="subject">
+        Subject: Second Query Letter – Strong Warning for Repeated Unprofessional Conduct
+    </div>
+
+    <div class="content">
+        Dear <span id="empNameSpan">[Employee's Name]</span>, <br><br>
+
+        This letter serves as a follow-up to the query letter issued to you on 
+        <input type="text" id="firstQueryDate" placeholder="[Insert Date of First Query Letter]" required>
+        where you were formally warned regarding your 
+        <input type="text" id="firstIncidentType" placeholder="[lateness/absence]" required>
+        from the scheduled team meeting on 
+        <input type="text" id="firstIncidentDate" placeholder="[Insert Date of First Incident]" required>. Despite the warning, it has been noted with concern that on 
+        <input type="text" id="latestIncidentDate" placeholder="[Insert Date(s) of Latest Incident]" required>
+        you repeated the same unprofessional behaviour by 
+        <input type="text" id="latestIncidentType" placeholder="[being late for/absent from]" required>
+        another scheduled meeting without prior communication or valid reason. This repeated action demonstrates a clear disregard for the company’s expectations and a lack of commitment to your responsibilities. Such behaviour is detrimental to the productivity of the team and undermines the professional environment we strive to maintain. <br><br>
+
+        This letter is a strong warning. You are hereby informed that any further occurrence of this conduct will result in serious disciplinary actions, which may include sanctions up to and including your dismissal from the organization. <br><br>
+
+        We urge you to take this warning seriously and make immediate corrections to avoid any further disciplinary measures. Please acknowledge receipt of this letter and confirm your understanding of the consequences should this behaviour persist within 24 hours.
+    </div>
+
+    <div class="signature">
+        Yours sincerely, <br><br>
+        <input type="text" id="hrName" placeholder="[Your Name]" required><br>
+        HR Manager <br>
+        <input type="text" id="hrCompanyName" placeholder="[Company Name]" required>
+    </div>
+
+    <button type="button" onclick="saveProgress()">Save Progress</button>
+    <button type="button" onclick="generatePDF()">Save as PDF</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // Save progress to localStorage
+        function saveProgress() {
+            const data = {
+                companyLetterhead: document.getElementById('companyLetterhead').value,
+                date: document.getElementById('date').value,
+                employeeName: document.getElementById('employeeName').value,
+                employeePosition: document.getElementById('employeePosition').value,
+                department: document.getElementById('department').value,
+                companyName: document.getElementById('companyName').value,
+                companyAddress: document.getElementById('companyAddress').value,
+                firstQueryDate: document.getElementById('firstQueryDate').value,
+                firstIncidentType: document.getElementById('firstIncidentType').value,
+                firstIncidentDate: document.getElementById('firstIncidentDate').value,
+                latestIncidentDate: document.getElementById('latestIncidentDate').value,
+                latestIncidentType: document.getElementById('latestIncidentType').value,
+                hrName: document.getElementById('hrName').value,
+                hrCompanyName: document.getElementById('hrCompanyName').value
+            };
+            localStorage.setItem('secondQueryLetterData', JSON.stringify(data));
+            alert('Progress saved successfully!');
+        }
+
+        // Load progress from localStorage
+        function loadProgress() {
+            const data = JSON.parse(localStorage.getItem('secondQueryLetterData'));
+            if (data) {
+                document.getElementById('companyLetterhead').value = data.companyLetterhead;
+                document.getElementById('date').value = data.date;
+                document.getElementById('employeeName').value = data.employeeName;
+                document.getElementById('employeePosition').value = data.employeePosition;
+                document.getElementById('department').value = data.department;
+                document.getElementById('companyName').value = data.companyName;
+                document.getElementById('companyAddress').value = data.companyAddress;
+                document.getElementById('firstQueryDate').value = data.firstQueryDate;
+                document.getElementById('firstIncidentType').value = data.firstIncidentType;
+                document.getElementById('firstIncidentDate').value = data.firstIncidentDate;
+                document.getElementById('latestIncidentDate').value = data.latestIncidentDate;
+                document.getElementById('latestIncidentType').value = data.latestIncidentType;
+                document.getElementById('hrName').value = data.hrName;
+                document.getElementById('hrCompanyName').value = data.hrCompanyName;
+
+                document.getElementById('empNameSpan').innerText = data.employeeName;
+            }
+        }
+
+        // Generate PDF
+        function generatePDF() {
+            const doc = new jsPDF();
+    
+            doc.setFont("Times", "Normal");
+            doc.setFontSize(12);
+
+            const lineHeight = 0.6;
+            const marginTop = 7;
+            const pageHeight = doc.internal.pageSize.height;
+
+            let startY = 10;
+
+            doc.text(document.getElementById('companyLetterhead').value, 20, startY);
+            startY += 10;
+            doc.text(`Date: ${document.getElementById('date').value}`, 20, startY);
+            
+            startY += 10;
+            doc.text(`To:`, 20, startY);
+            startY += 7;
+            doc.text(document.getElementById('employeeName').value, 20, startY);
+            startY += 7;
+            doc.text(document.getElementById('employeePosition').value, 20, startY);
+            startY += 7;
+            doc.text(document.getElementById('department').value, 20, startY);
+            startY += 7;
+            doc.text(document.getElementById('companyName').value, 20, startY);
+            startY += 7;
+            doc.text(document.getElementById('companyAddress').value, 20, startY);
+
+            startY += 10;
+            doc.text(`Subject: Second Query Letter – Strong Warning for Repeated Unprofessional Conduct`, 20, startY);
+
+            startY += 10;
+            const contentText = `
+Dear ${document.getElementById('employeeName').value},
+
+This letter serves as a follow-up to the query letter issued to you on ${document.getElementById('firstQueryDate').value}, where you were formally warned regarding your ${document.getElementById('firstIncidentType').value} from the scheduled team meeting on ${document.getElementById('firstIncidentDate').value}. Despite the warning, it has been noted with concern that on ${document.getElementById('latestIncidentDate').value} you repeated the same unprofessional behaviour by ${document.getElementById('latestIncidentType').value} another scheduled meeting without prior communication or valid reason. This repeated action demonstrates a clear disregard for the company’s expectations and a lack of commitment to your responsibilities. Such behaviour is detrimental to the productivity of the team and undermines the professional environment we strive to maintain.
+
+This letter is a strong warning. You are hereby informed that any further occurrence of this conduct will result in serious disciplinary actions, which may include sanctions up to and including your dismissal from the organization.
+
+We urge you to take this warning seriously and make immediate corrections to avoid any further disciplinary measures. Please acknowledge receipt of this letter and confirm your understanding of the consequences should this behaviour persist within 24 hours.
+            `;
+
+            const contentLines = doc.splitTextToSize(contentText, 170);
+            
+            contentLines.forEach(line => {
+                if (startY + 10 > pageHeight) {
+                    doc.addPage();
+                    startY = marginTop;
+                }
+                doc.text(line, 20, startY);
+                startY += 10 * lineHeight;
+            });
+
+            startY += 10;
+            if (startY + 30 > pageHeight) {
+                doc.addPage();
+                startY = marginTop;
+            }
+            doc.text(`Yours sincerely,`, 20, startY);
+            startY += 20;
+            doc.text(document.getElementById('hrName').value, 20, startY);
+            startY += 10;
+            doc.text(`HR Manager`, 20, startY);
+            startY += 10;
+            doc.text(document.getElementById('hrCompanyName').value, 20, startY);
+
+            doc.save('Second_Query_Letter.pdf');
+        }
+
+        // Load progress on page load
+        window.onload = loadProgress;
+    </script>
+</body>
+</html>
